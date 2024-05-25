@@ -4,7 +4,9 @@
 [![Crates.io](https://img.shields.io/crates/v/dvd-term.svg)](https://crates.io/crates/dvd-term)
 [![Docs.rs](https://docs.rs/dvd-term/badge.svg)](https://docs.rs/dvd-term)
 
-A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`ruscii`](https://crates.io/crates/ruscii/) for main loop & rendering, and [`figlet-rs`](https://crates.io/crates/figlet-rs) for converting 'logo' text into ASCII art.  
+A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`ruscii`](https://crates.io/crates/ruscii/) for main loop & rendering, and [`figlet-rs`](https://crates.io/crates/figlet-rs) for converting 'logo' text into ASCII art.
+
+![example gif](dvd-term.gif)
 
 - _NOTE: For now, this defaults to using my own custom edit of the "bigmoney-ne" figlet font by Nathan Bloomfield, that I call "hash3d". (Located in the 'assets' directory of the repo). I will probably add the ability to specify other built-in or custom fonts in the future._
 
