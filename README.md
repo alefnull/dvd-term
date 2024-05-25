@@ -4,16 +4,16 @@
 [![Crates.io](https://img.shields.io/crates/v/dvd-term.svg)](https://crates.io/crates/dvd-term)
 [![Docs.rs](https://docs.rs/dvd-term/badge.svg)](https://docs.rs/dvd-term)
 
-A bouncing DVD logo (or custom text) for the terminal. Uses [`ruscii`](https://crates.io/crates/ruscii/) for main loop & rendering, and [`figlet-rs`](https://crates.io/crates/figlet-rs) for converting 'logo' text into ASCII art.  
+A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`ruscii`](https://crates.io/crates/ruscii/) for main loop & rendering, and [`figlet-rs`](https://crates.io/crates/figlet-rs) for converting 'logo' text into ASCII art.  
 
 - _NOTE: For now, this defaults to using my own custom edit of the "bigmoney-ne" figlet font by Nathan Bloomfield, that I call "hash3d". (Located in the 'assets' directory of the repo). I will probably add the ability to specify other built-in or custom fonts in the future._
 
 ```
-Usage: dvd-term.exe [OPTIONS]
+Usage: dvd-term [OPTIONS]
 
 Options:
-      -t, --text <TEXT>    The text to display
-      -c, --color <COLOR>  Initial logo color (0-255). Defaults to white (15). (https://ss64.com/bash/syntax-colors.html)
+      -t, --text <TEXT>    The custom text to use
+      -c, --color <COLOR>  Initial logo color code (0-255). Defaults to white (15). (https://ss64.com/bash/syntax-colors.html)
       -r, --random         If included, logo will randomize color when it bounces
       -s, --speed <SPEED>  The speed of the logo (how many 'cells' to move per second). Defaults to 15
       -h, --help           Print help

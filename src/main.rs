@@ -18,24 +18,23 @@ mod util;
 
 static MATCHES: Lazy<clap::ArgMatches> = Lazy::new(|| {
     command!()
-        .author("alefnull")
         .help_template("
 
-{before-help}{name} {version} - {author-with-newline}
+{before-help}{name} {version}
 {about-with-newline}
 {usage-heading} {usage}
 
 {all-args}{after-help}
 ")
-        .about("A bouncing DVD logo (or custom text) in the terminal")
+        .about("A bouncing ASCII art DVD logo (or custom text) for the terminal.")
         .arg(
-            arg!(-t --text <TEXT> "The text to display")
+            arg!(-t --text <TEXT> "The custom text to use")
                 .value_parser(value_parser!(String))
                 .required(false)
                 .action(ArgAction::Set),
         )
         .arg(
-            arg!(-c --color <COLOR> "Initial logo color (0-255). Defaults to white (15). (https://ss64.com/bash/syntax-colors.html)")
+            arg!(-c --color <COLOR> "Initial logo color code (0-255). Defaults to white (15). (https://ss64.com/bash/syntax-colors.html)")
                 .value_parser(value_parser!(u8))
                 .required(false)
                 .action(ArgAction::Set),
