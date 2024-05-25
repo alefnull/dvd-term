@@ -2,7 +2,7 @@ use figlet_rs::FIGfont;
 use rand::Rng;
 use ruscii::{spatial::Vec2, terminal::Color};
 
-pub const FONT_FILE: &str = include_str!("..\\..\\assets\\hash3d.flf");
+pub const FONT_FILE: &str = include_str!("../../assets/hash3d.flf");
 
 pub fn get_random_position(win_size: Vec2, text_size: Vec2) -> Vec2 {
     let mut rng = rand::thread_rng();
