@@ -14,7 +14,7 @@ A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`ruscii`]
 Usage: dvd-term [OPTIONS]
 
 Options:
-      -t, --text <TEXT>    The custom text to use
+      -t, --text <TEXT>    The custom text to use. Defaults to "DVD"
       -c, --color <COLOR>  Initial logo color code (0-255). Defaults to white (15). (https://ss64.com/bash/syntax-colors.html)
       -r, --random         If included, logo will randomize color when it bounces
       -s, --speed <SPEED>  The speed of the logo (how many 'cells' to move per second). Defaults to 15

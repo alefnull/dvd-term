@@ -28,7 +28,7 @@ static MATCHES: Lazy<clap::ArgMatches> = Lazy::new(|| {
 ")
         .about("A bouncing ASCII art DVD logo (or custom text) for the terminal.")
         .arg(
-            arg!(-t --text <TEXT> "The custom text to use")
+            arg!(-t --text <TEXT> "The custom text to use. Defaults to \"DVD\"")
                 .value_parser(value_parser!(String))
                 .required(false)
                 .action(ArgAction::Set),
