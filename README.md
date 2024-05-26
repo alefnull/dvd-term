@@ -30,14 +30,7 @@ Options:
 
 * Install the rust toolchain in order to have cargo installed by following
   [this](https://www.rust-lang.org/tools/install) guide.
-* ~~run `cargo install dvd-term`~~
-
-> Not yet published. Instead, for now, you will need to build it yourself:
->
->       $ git clone https://github.com/alefnull/dvd-term
->       $ cd dvd-term/
->       $ cargo build
->
+* run `cargo install dvd-term`
 
 ## License
 
