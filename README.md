@@ -25,8 +25,6 @@ Options:
       -V, --version        Print version
 ```
 
-- _NOTE: At the moment, 'speed' is tied directly to the "game loop", if you will, so hitting `Q` or `Esc` to quit while using very low speed values (1 'cell' per second, for example) can have up to a second's delay after input before quitting. I hope to try and uncouple this at some point._
-
 ## Installation
 
 ### Cargo
