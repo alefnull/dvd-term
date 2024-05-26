@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/alefnull/dvd-term/workflows/CI/badge.svg)](https://github.com/alefnull/dvd-term/actions)
 [![Crates.io](https://img.shields.io/crates/v/dvd-term.svg)](https://crates.io/crates/dvd-term)
+[![Crates.io Total Downloads](https://img.shields.io/crates/d/dvd-term?label=crates.io%20downloads)](https://crates.io/crates/dvd-term)
 
 A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`ruscii`](https://crates.io/crates/ruscii/) for main loop & rendering, and [`figlet-rs`](https://crates.io/crates/figlet-rs) for converting 'logo' text into ASCII art.
 
