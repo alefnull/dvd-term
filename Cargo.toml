@@ -2,7 +2,7 @@
 name = "dvd-term"
 version = "0.1.22"
 edition = "2021"
-description = "just a terminal toy"
+description = "A bouncing ASCII art DVD logo (or custom text) for the terminal."
 repository = "https://github.com/alefnull/dvd-term"
 license = "MIT OR Apache-2.0"
 
