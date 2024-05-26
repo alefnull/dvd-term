@@ -12,23 +12,6 @@ pub struct AppState {
     pub bottom: usize,
 }
 
-impl Default for AppState {
-    fn default() -> Self {
-        Self {
-            text: "Hello, World!".to_string(),
-            pos: Vec2::xy(0, 0),
-            dir: Vec2::xy(1, 1),
-            size: Vec2::xy(
-                get_fig_width("Hello, World!"),
-                get_fig_height("Hello, World!"),
-            ),
-            randomized: false,
-            color: Color::White,
-            bottom: 0,
-        }
-    }
-}
-
 impl AppState {
     pub fn new(text: String, pos: Vec2, dir: Vec2, color: Color, randomized: bool) -> Self {
         let size = Vec2::xy(get_fig_width(&text), get_fig_height(&text));
