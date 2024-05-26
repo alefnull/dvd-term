@@ -62,13 +62,6 @@ jobs:
           profile: minimal
           override: true
       - uses: Swatinem/rust-cache@v2
-      - name: Install x11 to try and fix build error
-        shell: bash
-        run: |
-          if [[ ${{ runner.os }} == 'Linux' ]]; then
-            sudo apt update
-            sudo apt install -y libx11-dev
-          fi
       - name: Cargo build
         uses: actions-rs/cargo@v1
         with:
