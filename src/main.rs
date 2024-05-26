@@ -34,6 +34,12 @@ static MATCHES: Lazy<clap::ArgMatches> = Lazy::new(|| {
                 .action(ArgAction::Set),
         )
         .arg(
+            arg!(-f --font <FONT> "Specify the path of the figlet font to use")
+                .value_parser(value_parser!(String))
+                .required(false)
+                .action(ArgAction::Set),
+        )
+        .arg(
             arg!(-c --color <COLOR> "Initial logo color code (0-255). Defaults to white (15). (https://ss64.com/bash/syntax-colors.html)")
                 .value_parser(value_parser!(u8))
                 .required(false)
@@ -60,6 +66,11 @@ fn main() {
     } else {
         "DVD"
     };
+
+    let mut font = FIGfont::from_content(FONT_FILE).expect("Failed to load font");
+    if let Some(custom_font) = MATCHES.get_one::<String>("font") {
+        font = FIGfont::from_file(custom_font).expect("Failed to load font");
+    }
 
     let color = if let Some(color) = MATCHES.get_one::<u8>("color") {
         Color::Xterm(*color)
@@ -89,16 +100,15 @@ fn main() {
 
     let mut app_state = AppState::new(
         text.to_string(),
+        &font,
         get_random_position(
             app.window().size(),
-            Vec2::xy(get_fig_width(text), get_fig_height(text)),
+            Vec2::xy(get_fig_width(text, &font), get_fig_height(text, &font)),
         ),
         dir,
         color,
         randomized,
     );
-
-    let font = FIGfont::from_content(FONT_FILE).expect("Failed to load font");
 
     let text = font.convert(text).expect("Failed to render text");
 

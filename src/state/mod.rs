@@ -1,3 +1,4 @@
+use figlet_rs::FIGfont;
 use ruscii::{spatial::Vec2, terminal::Color};
 
 use crate::util::{get_fig_height, get_fig_width, get_random_color};
@@ -13,8 +14,15 @@ pub struct AppState {
 }
 
 impl AppState {
-    pub fn new(text: String, pos: Vec2, dir: Vec2, color: Color, randomized: bool) -> Self {
-        let size = Vec2::xy(get_fig_width(&text), get_fig_height(&text));
+    pub fn new(
+        text: String,
+        font: &FIGfont,
+        pos: Vec2,
+        dir: Vec2,
+        color: Color,
+        randomized: bool,
+    ) -> Self {
+        let size = Vec2::xy(get_fig_width(&text, font), get_fig_height(&text, font));
         Self {
             text: text.to_string(),
             pos,

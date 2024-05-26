@@ -18,34 +18,28 @@ pub fn get_random_color() -> Color {
     Color::Xterm(rng.gen_range(0..255))
 }
 
-pub fn get_fig_width(text: &str) -> usize {
-    if let Ok(font) = FIGfont::from_content(FONT_FILE) {
-        if let Some(fig_text) = font.convert(text) {
-            let max_width = fig_text
-                .to_string()
-                .lines()
-                .map(|l| l.chars().count())
-                .max()
-                .unwrap();
-            return max_width;
-        }
+pub fn get_fig_width(text: &str, font: &FIGfont) -> usize {
+    if let Some(fig_text) = font.convert(text) {
+        let max_width = fig_text
+            .to_string()
+            .lines()
+            .map(|l| l.chars().count())
+            .max()
+            .unwrap();
+        return max_width;
     }
     0
 }
 
-pub fn get_fig_height(text: &str) -> usize {
-    if let Ok(font) = FIGfont::from_content(FONT_FILE) {
-        if let Some(fig_text) = font.convert(text) {
-            let mut max_height = fig_text.height as usize;
-
-            for line in fig_text.to_string().lines() {
-                if contains_only_escapes_or_white_spaces(line) {
-                    max_height -= 1;
-                }
+pub fn get_fig_height(text: &str, font: &FIGfont) -> usize {
+    if let Some(fig_text) = font.convert(text) {
+        let mut max_height = fig_text.height as usize;
+        for line in fig_text.to_string().lines() {
+            if contains_only_escapes_or_white_spaces(line) {
+                max_height -= 1;
             }
-
-            return max_height;
         }
+        return max_height;
     }
     0
 }
