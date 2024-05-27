@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+## [v0.1.23]
+
+### Added
+
+* CLI argument to specify custom figlet font path `-f, --font <FONT_PATH>`
+
 ## [v0.1.22]
 
 ### Fixed
