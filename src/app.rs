@@ -7,7 +7,7 @@ use crossterm::{
     cursor::{Hide, MoveTo, Show},
     event::{poll, read, Event, KeyEvent},
     execute, queue,
-    style::{Color, Print, SetForegroundColor},
+    style::{Color, Print, SetBackgroundColor, SetForegroundColor},
     terminal::{
         disable_raw_mode, enable_raw_mode, Clear, ClearType, EnterAlternateScreen,
         LeaveAlternateScreen,
@@ -24,26 +24,7 @@ pub struct Cell {
     pub char: char,
 }
 
-pub struct Canvas {
-    pub data: Vec<Cell>,
-    pub size: Vec2,
-    pub def_cell: Cell,
-}
-
-impl Canvas {
-    pub fn new(size: Vec2, def_cell: &Cell) -> Self {
-        let mut data = Vec::new();
-        data.resize((size.x * size.y) as usize, *def_cell);
-        Self {
-            data,
-            size,
-            def_cell: *def_cell,
-        }
-    }
-}
-
 pub struct App {
-    pub canvas: Canvas,
     pub target: BufWriter<std::io::Stdout>,
     pub input: String,
     pub font: FIGfont,
@@ -66,13 +47,6 @@ impl App {
             color,
             random,
             speed,
-            canvas: Canvas::new(
-                term_size(),
-                &Cell {
-                    color: 0,
-                    char: ' ',
-                },
-            ),
             target: BufWriter::new(std::io::stdout()),
             fig_str,
             position: Vec2::rand(term_size().x, term_size().y, fig_size.x, fig_size.y),
@@ -82,7 +56,7 @@ impl App {
     }
 
     pub fn update(&mut self) {
-        self.canvas.size = term_size();
+        let canvas_size = term_size();
 
         let mut bounce = false;
 
@@ -91,10 +65,10 @@ impl App {
             self.position.x = 0;
             self.direction.x = -self.direction.x;
         } else if self.position.x + self.direction.x + fig_size(self.fig_str.as_str()).x
-            >= self.canvas.size.x
+            >= canvas_size.x
         {
             bounce = true;
-            self.position.x = self.canvas.size.x - fig_size(self.fig_str.as_str()).x - 1;
+            self.position.x = canvas_size.x - fig_size(self.fig_str.as_str()).x - 1;
             self.direction.x = -self.direction.x;
         }
 
@@ -103,37 +77,33 @@ impl App {
             self.position.y = 0;
             self.direction.y = -self.direction.y;
         } else if self.position.y + self.direction.y + fig_size(self.fig_str.as_str()).y
-            >= self.canvas.size.y
+            >= canvas_size.y
         {
             bounce = true;
-            self.position.y = self.canvas.size.y - fig_size(self.fig_str.as_str()).y - 1;
+            self.position.y = canvas_size.y - fig_size(self.fig_str.as_str()).y - 1;
             self.direction.y = -self.direction.y;
         }
 
         self.position.x += self.direction.x;
         self.position.y += self.direction.y;
 
-        if bounce {
+        if self.random && bounce {
             self.color = rand::thread_rng().gen_range(0..=255);
         }
     }
 
     pub fn draw(&mut self) {
-        queue!(self.target, Clear(ClearType::All)).unwrap();
+        queue!(
+            self.target,
+            SetBackgroundColor(Color::AnsiValue(0)),
+            Clear(ClearType::All)
+        )
+        .unwrap();
         for (i, line) in self.fig_str.lines().enumerate() {
+            if line.trim().is_empty() {
+                continue;
+            }
             let pos = Vec2::new(self.position.x, self.position.y + i as i32);
-            self.canvas
-                .data
-                .iter_mut()
-                .skip((pos.y * self.canvas.size.x + pos.x) as usize)
-                .take(line.chars().count())
-                .for_each(|cell| {
-                    if cell.char == self.canvas.def_cell.char {
-                        return;
-                    }
-                    cell.char = line.chars().next().unwrap();
-                    cell.color = self.color;
-                });
 
             queue!(
                 self.target,
