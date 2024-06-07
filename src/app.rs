@@ -106,17 +106,17 @@ impl App {
                 SetForegroundColor(Color::AnsiValue(self.color)),
                 Print(line)
             )
-            .unwrap();
+            .expect("Failed to print text");
         }
 
-        self.target.flush().unwrap();
+        self.target.flush().expect("Failed to flush stdout");
     }
 
     pub fn handle_input(&mut self) {
         let target_frame_time = 1000 / self.speed;
 
-        if poll(Duration::from_millis(target_frame_time)).unwrap() {
-            match read().unwrap() {
+        if poll(Duration::from_millis(target_frame_time)).expect("Failed to poll for events") {
+            match read().expect("Failed to read event") {
                 Event::Key(KeyEvent {
                     code: crossterm::event::KeyCode::Char('q'),
                     ..
@@ -131,8 +131,9 @@ impl App {
     }
 
     pub fn run(&mut self) {
-        enable_raw_mode().unwrap();
-        execute!(self.target, EnterAlternateScreen, Hide,).unwrap();
+        enable_raw_mode().expect("Failed to enable raw mode");
+        execute!(self.target, EnterAlternateScreen, Hide,)
+            .expect("Failed to enter alternate screen");
 
         while self.running {
             self.update();
@@ -140,7 +141,8 @@ impl App {
             self.handle_input();
         }
 
-        execute!(self.target, Show, LeaveAlternateScreen).unwrap();
-        disable_raw_mode().unwrap();
+        execute!(self.target, Show, LeaveAlternateScreen)
+            .expect("Failed to leave alternate screen");
+        disable_raw_mode().expect("Failed to disable raw mode");
     }
 }

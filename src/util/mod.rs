@@ -39,7 +39,6 @@ pub(crate) fn figlet(input: &str, font: &FIGfont) -> String {
 
 pub fn fig_size(input: &str) -> Vec2 {
     let w = input.lines().map(|l| l.chars().count()).max().unwrap_or(0);
-    // h = only the lines that aren't empty/blank/whitespace/escaped/etc
     let h = input.lines().filter(|l| !l.trim().is_empty()).count();
 
     Vec2::new(w as i32, h as i32)
