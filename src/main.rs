@@ -1,20 +1,11 @@
 use clap::{arg, command, value_parser, ArgAction};
 use figlet_rs::FIGfont;
 use once_cell::sync::Lazy;
-use rand::{thread_rng, Rng};
-use ruscii::{
-    app::{App, Config, State},
-    drawing::Pencil,
-    keyboard::{Key, KeyEvent},
-    spatial::Vec2,
-    terminal::{Color, VisualElement, Window},
-};
-use util::{get_fig_height, get_fig_width, get_random_position, FONT_FILE};
 
-use crate::state::AppState;
-
-mod state;
+mod app;
 mod util;
+
+static DEFAULT_FONT: &str = include_str!("../assets/hash3d.flf");
 
 static MATCHES: Lazy<clap::ArgMatches> = Lazy::new(|| {
     command!()
@@ -61,79 +52,42 @@ static MATCHES: Lazy<clap::ArgMatches> = Lazy::new(|| {
 });
 
 fn main() {
-    let text = if let Some(text) = MATCHES.get_one::<String>("text") {
-        text
+    let input_text = if let Some(text) = MATCHES.get_one::<String>("text") {
+        text.to_string()
     } else {
-        "DVD"
+        "DVD".to_string()
     };
 
-    let mut font = FIGfont::from_content(FONT_FILE).expect("Failed to load font");
-    if let Some(custom_font) = MATCHES.get_one::<String>("font") {
-        font = FIGfont::from_file(custom_font).expect("Failed to load font");
-    }
+    let font_path = if let Some(font) = MATCHES.get_one::<String>("font") {
+        font.to_string()
+    } else {
+        "".to_string()
+    };
+    let font = if font_path.is_empty() {
+        FIGfont::from_content(DEFAULT_FONT).expect("Failed to load default font")
+    } else {
+        FIGfont::from_file(&font_path).expect("Failed to load custom font")
+    };
 
     let color = if let Some(color) = MATCHES.get_one::<u8>("color") {
-        Color::Xterm(*color)
-    } else {
-        Color::White
-    };
-
-    let mut randomized = false;
-
-    if let Some(random) = MATCHES.get_one::<bool>("random") {
-        randomized = *random;
-    };
-
-    let speed = if let Some(speed) = MATCHES.get_one::<u32>("speed") {
-        *speed
+        *color
     } else {
         15
     };
 
-    let mut rng = thread_rng();
-    let left: bool = rng.gen();
-    let up: bool = rng.gen();
+    let random = if let Some(random) = MATCHES.get_one::<bool>("random") {
+        *random
+    } else {
+        false
+    };
 
-    let dir = Vec2::xy(if left { -1 } else { 1 }, if up { -1 } else { 1 });
+    let speed = if let Some(speed) = MATCHES.get_one::<u32>("speed") {
+        *speed as u64
+    } else {
+        30
+    };
 
-    let mut app = App::config(Config::new().fps(speed));
+    let mut app = app::App::new(input_text, font, color, random, speed);
 
-    let mut app_state = AppState::new(
-        text.to_string(),
-        &font,
-        get_random_position(
-            app.window().size(),
-            Vec2::xy(get_fig_width(text, &font), get_fig_height(text, &font)),
-        ),
-        dir,
-        color,
-        randomized,
-    );
-
-    let text = font.convert(text).expect("Failed to render text");
-
-    app.run(|state: &mut State, window: &mut Window| {
-        window.canvas_mut().set_default_element(&VisualElement {
-            background: Color::Xterm(0),
-            ..Default::default()
-        });
-        window.canvas_mut().clear();
-        let win_size = window.size();
-        for key_event in state.keyboard().last_key_events() {
-            match key_event {
-                KeyEvent::Pressed(Key::Esc) => state.stop(),
-                KeyEvent::Pressed(Key::Q) => state.stop(),
-                _ => (),
-            }
-        }
-
-        let mut pencil = Pencil::new(window.canvas_mut());
-
-        app_state.update(win_size);
-
-        for (y, line) in text.to_string().lines().enumerate() {
-            pencil.set_foreground(app_state.color);
-            pencil.draw_text(line, Vec2::xy(app_state.pos.x, app_state.pos.y + y as i32));
-        }
-    });
+    app.run();
 }

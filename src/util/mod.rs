@@ -1,49 +1,46 @@
-use figlet_rs::FIGfont;
+use figlet_rs::{self, FIGfont};
 use rand::Rng;
-use ruscii::{spatial::Vec2, terminal::Color};
 
-pub const FONT_FILE: &str = include_str!("../../assets/hash3d.flf");
-
-pub fn get_random_position(win_size: Vec2, text_size: Vec2) -> Vec2 {
-    let mut rng = rand::thread_rng();
-    Vec2::xy(
-        rng.gen_range(0..win_size.x - text_size.x),
-        rng.gen_range(0..win_size.y - text_size.y),
-    )
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Vec2 {
+    pub x: i32,
+    pub y: i32,
 }
 
-pub fn get_random_color() -> Color {
-    let mut rng = rand::thread_rng();
-
-    Color::Xterm(rng.gen_range(0..255))
-}
-
-pub fn get_fig_width(text: &str, font: &FIGfont) -> usize {
-    if let Some(fig_text) = font.convert(text) {
-        let max_width = fig_text
-            .to_string()
-            .lines()
-            .map(|l| l.chars().count())
-            .max()
-            .unwrap();
-        return max_width;
+impl Vec2 {
+    pub fn new(x: i32, y: i32) -> Self {
+        Self { x, y }
     }
-    0
-}
 
-pub fn get_fig_height(text: &str, font: &FIGfont) -> usize {
-    if let Some(fig_text) = font.convert(text) {
-        let mut max_height = fig_text.height as usize;
-        for line in fig_text.to_string().lines() {
-            if contains_only_escapes_or_white_spaces(line) {
-                max_height -= 1;
-            }
+    pub fn rand(width: i32, height: i32, xoff: i32, yoff: i32) -> Self {
+        Self {
+            x: rand::thread_rng().gen_range(0..width - xoff),
+            y: rand::thread_rng().gen_range(0..height - yoff),
         }
-        return max_height;
     }
-    0
+
+    pub fn rand_dir() -> Self {
+        let x = if rand::thread_rng().gen() { 1 } else { -1 };
+        let y = if rand::thread_rng().gen() { 1 } else { -1 };
+        Self { x, y }
+    }
 }
 
-pub fn contains_only_escapes_or_white_spaces(text: &str) -> bool {
-    text.chars().all(|c| c.is_whitespace() || c == '\x1b')
+pub fn term_size() -> Vec2 {
+    let (cols, rows) = crossterm::terminal::size().expect("Failed to get terminal size"); // (cols, rows)
+    Vec2::new(cols as i32, rows as i32)
+}
+
+pub(crate) fn figlet(input: &str, font: &FIGfont) -> String {
+    font.convert(input)
+        .expect("Failed to convert text")
+        .to_string()
+}
+
+pub fn fig_size(input: &str) -> Vec2 {
+    let w = input.lines().map(|l| l.chars().count()).max().unwrap_or(0);
+    // h = only the lines that aren't empty/blank/whitespace/escaped/etc
+    let h = input.lines().filter(|l| !l.trim().is_empty()).count();
+
+    Vec2::new(w as i32, h as i32)
 }

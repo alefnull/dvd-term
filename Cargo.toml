@@ -19,4 +19,4 @@ clap = { version = "4.5.4", features = ["cargo"] }
 figlet-rs = "0.1.5"
 once_cell = "1.19.0"
 rand = "0.8.5"
-ruscii = "0.4.0"
+crossterm = "0.27.0"
