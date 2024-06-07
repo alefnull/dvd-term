@@ -93,12 +93,7 @@ impl App {
     }
 
     pub fn draw(&mut self) {
-        queue!(
-            self.target,
-            SetBackgroundColor(Color::AnsiValue(0)),
-            Clear(ClearType::All)
-        )
-        .unwrap();
+        queue!(self.target, Clear(ClearType::All),).expect("Failed to clear screen");
         for (i, line) in self.fig_str.lines().enumerate() {
             if line.trim().is_empty() {
                 continue;
