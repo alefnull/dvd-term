@@ -7,7 +7,7 @@ use crossterm::{
     cursor::{Hide, MoveTo, Show},
     event::{poll, read, Event, KeyEvent},
     execute, queue,
-    style::{Color, Print, SetBackgroundColor, SetForegroundColor},
+    style::{Color, Print, SetForegroundColor},
     terminal::{
         disable_raw_mode, enable_raw_mode, Clear, ClearType, EnterAlternateScreen,
         LeaveAlternateScreen,
@@ -77,7 +77,7 @@ impl App {
             self.position.y = 0;
             self.direction.y = -self.direction.y;
         } else if self.position.y + self.direction.y + fig_size(self.fig_str.as_str()).y
-            >= canvas_size.y
+            > canvas_size.y
         {
             bounce = true;
             self.position.y = canvas_size.y - fig_size(self.fig_str.as_str()).y - 1;
