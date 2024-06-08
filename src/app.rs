@@ -82,7 +82,7 @@ impl App {
                 bounce = true;
                 self.position.y = 0;
                 self.direction.y = -self.direction.y;
-            } else if self.position.y + self.direction.y + self.fig_size.y > canvas_size.y {
+            } else if self.position.y + self.direction.y + self.fig_size.y > canvas_size.y - 1 {
                 bounce = true;
                 self.position.y = canvas_size.y - self.fig_size.y - 1;
                 self.direction.y = -self.direction.y;
@@ -131,9 +131,6 @@ impl App {
             .expect("Failed to print text");
         } else {
             for (i, line) in self.fig_str.lines().enumerate() {
-                if line.trim().is_empty() {
-                    continue;
-                }
                 let pos = Vec2::new(self.position.x, self.position.y + i as i32);
 
                 queue!(
