@@ -35,6 +35,11 @@ pub(crate) fn figlet(input: &str, font: &FIGfont) -> String {
     font.convert(input)
         .expect("Failed to convert text")
         .to_string()
+        .lines()
+        .filter(|l| !l.trim().is_empty())
+        .collect::<Vec<_>>()
+        .join("\n")
+        .to_string()
 }
 
 pub fn fig_size(input: &str) -> Vec2 {

@@ -1,6 +1,9 @@
+use std::fs::read_to_string;
+
 use clap::{arg, command, value_parser, ArgAction};
 use figlet_rs::FIGfont;
 use once_cell::sync::Lazy;
+use util::fig_size;
 
 mod app;
 mod util;
@@ -25,7 +28,7 @@ static MATCHES: Lazy<clap::ArgMatches> = Lazy::new(|| {
                 .action(ArgAction::Set),
         )
         .arg(
-            arg!(-f --font <FONT> "Specify the path of the figlet font to use")
+            arg!(-f --font <FONT_PATH> "Specify the path of the figlet font to use")
                 .value_parser(value_parser!(String))
                 .required(false)
                 .action(ArgAction::Set),
@@ -53,6 +56,12 @@ static MATCHES: Lazy<clap::ArgMatches> = Lazy::new(|| {
                 .value_parser(value_parser!(bool))
                 .required(false)
                 .action(ArgAction::SetTrue),
+        )
+        .arg(
+            arg!(-a --art <ART_PATH> "Specify the path of a plain text file with the ASCII art to display")
+                .value_parser(value_parser!(String))
+                .required(false)
+                .action(ArgAction::Set),
         )
         .get_matches()
 });
@@ -101,7 +110,20 @@ fn main() {
         false
     };
 
-    let mut app = app::App::new(input_text, font, color, random, speed, plain);
+    let art_path = if let Some(art_path) = MATCHES.get_one::<String>("art") {
+        art_path.to_string()
+    } else {
+        "".to_string()
+    };
+
+    let art = !art_path.is_empty();
+
+    let mut app = app::App::new(input_text, font, color, random, speed, plain, art);
+
+    if art {
+        app.logo_string = read_to_string(art_path).expect("Failed to read art file");
+        app.logo_size = fig_size(&app.logo_string);
+    }
 
     app.run();
 }

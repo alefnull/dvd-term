@@ -7,7 +7,7 @@ use crossterm::{
     cursor::{Hide, MoveTo, Show},
     event::{poll, read, Event, KeyEvent},
     execute, queue,
-    style::{Color, Print, SetForegroundColor},
+    style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
     terminal::{
         disable_raw_mode, enable_raw_mode, Clear, ClearType, EnterAlternateScreen,
         LeaveAlternateScreen,
@@ -28,8 +28,8 @@ pub struct App {
     pub target: BufWriter<std::io::Stdout>,
     pub input: String,
     pub font: FIGfont,
-    pub fig_str: String,
-    pub fig_size: Vec2,
+    pub logo_string: String,
+    pub logo_size: Vec2,
     pub canvas_size: Vec2,
     pub color: u8,
     pub speed: u64,
@@ -38,6 +38,7 @@ pub struct App {
     pub direction: Vec2,
     pub running: bool,
     pub plain: bool,
+    pub art: bool,
 }
 
 impl App {
@@ -48,6 +49,7 @@ impl App {
         random: bool,
         speed: u64,
         plain: bool,
+        art: bool,
     ) -> Self {
         let fig_str = figlet(&input_text, &font);
         let fig_size = fig_size(&fig_str);
@@ -58,13 +60,14 @@ impl App {
             random,
             speed,
             target: BufWriter::new(std::io::stdout()),
-            fig_str,
+            logo_string: fig_str,
             canvas_size: term_size(),
-            fig_size,
+            logo_size: fig_size,
             position: Vec2::rand(term_size().x, term_size().y, fig_size.x, fig_size.y),
             direction: Vec2::rand_dir(),
             running: true,
             plain,
+            art,
         }
     }
 
@@ -79,8 +82,8 @@ impl App {
         let plain = if self.plain {
             true
         } else {
-            self.fig_size.x >= self.canvas_size.x - (self.fig_size.x / 2)
-                || self.fig_size.y >= self.canvas_size.y - (self.fig_size.y / 2)
+            self.logo_size.x >= self.canvas_size.x - (self.logo_size.x / 2)
+                || self.logo_size.y >= self.canvas_size.y - (self.logo_size.y / 2)
         };
 
         let mut bounce = false;
@@ -90,9 +93,9 @@ impl App {
                 bounce = true;
                 self.position.x = 0;
                 self.direction.x = -self.direction.x;
-            } else if self.position.x + self.direction.x + self.fig_size.x >= self.canvas_size.x {
+            } else if self.position.x + self.direction.x + self.logo_size.x >= self.canvas_size.x {
                 bounce = true;
-                self.position.x = self.canvas_size.x - self.fig_size.x - 1;
+                self.position.x = self.canvas_size.x - self.logo_size.x - 1;
                 self.direction.x = -self.direction.x;
             }
 
@@ -100,10 +103,9 @@ impl App {
                 bounce = true;
                 self.position.y = 0;
                 self.direction.y = -self.direction.y;
-            } else if self.position.y + self.direction.y + self.fig_size.y > self.canvas_size.y - 1
-            {
+            } else if self.position.y + self.direction.y + self.logo_size.y > self.canvas_size.y {
                 bounce = true;
-                self.position.y = self.canvas_size.y - self.fig_size.y - 1;
+                self.position.y = self.canvas_size.y - self.logo_size.y;
                 self.direction.y = -self.direction.y;
             }
         } else {
@@ -144,8 +146,8 @@ impl App {
         let plain = if self.plain {
             true
         } else {
-            self.fig_size.x >= self.canvas_size.x - (self.fig_size.x / 2)
-                || self.fig_size.y >= self.canvas_size.y - (self.fig_size.y / 2)
+            self.logo_size.x >= self.canvas_size.x - (self.logo_size.x / 2)
+                || self.logo_size.y >= self.canvas_size.y - (self.logo_size.y / 2)
         };
         if plain {
             queue!(
@@ -156,7 +158,7 @@ impl App {
             )
             .expect("Failed to print text");
         } else {
-            for (i, line) in self.fig_str.lines().enumerate() {
+            for (i, line) in self.logo_string.lines().enumerate() {
                 let pos = Vec2::new(self.position.x, self.position.y + i as i32);
 
                 queue!(
