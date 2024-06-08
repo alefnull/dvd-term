@@ -13,7 +13,7 @@ A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`figlet-r
 
 ## Recent Changes
 
-### v0.1.3
+### [v0.1.31]
 
 * Removed `ruscii` dependency due to some keyboard input issues on non-Windows platforms. rewritten using `crossterm` directly for rendering and corrected input handling.
 * Added CLI flag `-p, --plain` to force dvd-term to only display the input string instead of converting to ASCII art.
