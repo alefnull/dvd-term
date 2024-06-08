@@ -29,18 +29,20 @@ pub struct App {
     pub input: String,
     pub font: FIGfont,
     pub fig_str: String,
+    pub fig_size: Vec2,
     pub color: u8,
     pub speed: u64,
     pub random: bool,
     pub position: Vec2,
     pub direction: Vec2,
     pub running: bool,
+    pub plain: bool,
 }
 
 impl App {
     pub fn new(input_text: String, font: FIGfont, color: u8, random: bool, speed: u64) -> Self {
         let fig_str = figlet(&input_text, &font);
-        let fig_size = fig_size(input_text.as_str());
+        let fig_size = fig_size(&fig_str);
         Self {
             input: input_text,
             font,
@@ -49,39 +51,63 @@ impl App {
             speed,
             target: BufWriter::new(std::io::stdout()),
             fig_str,
+            fig_size,
             position: Vec2::rand(term_size().x, term_size().y, fig_size.x, fig_size.y),
             direction: Vec2::rand_dir(),
             running: true,
+            plain: false,
         }
     }
 
     pub fn update(&mut self) {
         let canvas_size = term_size();
 
+        self.plain = self.fig_size.x >= canvas_size.x - (self.fig_size.x / 2)
+            || self.fig_size.y >= canvas_size.y - (self.fig_size.y / 2);
+
         let mut bounce = false;
 
-        if self.position.x + self.direction.x < 0 {
-            bounce = true;
-            self.position.x = 0;
-            self.direction.x = -self.direction.x;
-        } else if self.position.x + self.direction.x + fig_size(self.fig_str.as_str()).x
-            >= canvas_size.x
-        {
-            bounce = true;
-            self.position.x = canvas_size.x - fig_size(self.fig_str.as_str()).x - 1;
-            self.direction.x = -self.direction.x;
-        }
+        if !self.plain {
+            if self.position.x + self.direction.x < 0 {
+                bounce = true;
+                self.position.x = 0;
+                self.direction.x = -self.direction.x;
+            } else if self.position.x + self.direction.x + self.fig_size.x >= canvas_size.x {
+                bounce = true;
+                self.position.x = canvas_size.x - self.fig_size.x - 1;
+                self.direction.x = -self.direction.x;
+            }
 
-        if self.position.y + self.direction.y < 0 {
-            bounce = true;
-            self.position.y = 0;
-            self.direction.y = -self.direction.y;
-        } else if self.position.y + self.direction.y + fig_size(self.fig_str.as_str()).y
-            > canvas_size.y
-        {
-            bounce = true;
-            self.position.y = canvas_size.y - fig_size(self.fig_str.as_str()).y - 1;
-            self.direction.y = -self.direction.y;
+            if self.position.y + self.direction.y < 0 {
+                bounce = true;
+                self.position.y = 0;
+                self.direction.y = -self.direction.y;
+            } else if self.position.y + self.direction.y + self.fig_size.y > canvas_size.y {
+                bounce = true;
+                self.position.y = canvas_size.y - self.fig_size.y - 1;
+                self.direction.y = -self.direction.y;
+            }
+        } else {
+            if self.position.x + self.direction.x < 0 {
+                bounce = true;
+                self.position.x = 0;
+                self.direction.x = -self.direction.x;
+            } else if self.position.x + self.direction.x + self.input.len() as i32 >= canvas_size.x
+            {
+                bounce = true;
+                self.position.x = canvas_size.x - self.input.len() as i32 - 1;
+                self.direction.x = -self.direction.x;
+            }
+
+            if self.position.y + self.direction.y < 0 {
+                bounce = true;
+                self.position.y = 0;
+                self.direction.y = -self.direction.y;
+            } else if self.position.y + self.direction.y > canvas_size.y {
+                bounce = true;
+                self.position.y = canvas_size.y - 1;
+                self.direction.y = -self.direction.y;
+            }
         }
 
         self.position.x += self.direction.x;
@@ -94,19 +120,30 @@ impl App {
 
     pub fn draw(&mut self) {
         queue!(self.target, Clear(ClearType::All),).expect("Failed to clear screen");
-        for (i, line) in self.fig_str.lines().enumerate() {
-            if line.trim().is_empty() {
-                continue;
-            }
-            let pos = Vec2::new(self.position.x, self.position.y + i as i32);
 
+        if self.plain {
             queue!(
                 self.target,
-                MoveTo(pos.x as u16, pos.y as u16),
+                MoveTo(self.position.x as u16, self.position.y as u16),
                 SetForegroundColor(Color::AnsiValue(self.color)),
-                Print(line)
+                Print(self.input.as_str())
             )
             .expect("Failed to print text");
+        } else {
+            for (i, line) in self.fig_str.lines().enumerate() {
+                if line.trim().is_empty() {
+                    continue;
+                }
+                let pos = Vec2::new(self.position.x, self.position.y + i as i32);
+
+                queue!(
+                    self.target,
+                    MoveTo(pos.x as u16, pos.y as u16),
+                    SetForegroundColor(Color::AnsiValue(self.color)),
+                    Print(line)
+                )
+                .expect("Failed to print text");
+            }
         }
 
         self.target.flush().expect("Failed to flush stdout");
