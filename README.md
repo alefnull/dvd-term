@@ -7,9 +7,27 @@
 [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/alefnull/dvd-term/total?label=github%20downloads)](https://github.com/alefnull/dvd-term/releases)
 [![License](https://img.shields.io/crates/l/dvd-term)](https://img.shields.io/github/actions/workflow/status/alefnull/dvd-term/cd?label=build)
 
-A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`ruscii`](https://crates.io/crates/ruscii/) for main loop & rendering, and [`figlet-rs`](https://crates.io/crates/figlet-rs) for converting 'logo' text into ASCII art.
+A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`figlet-rs`](https://crates.io/crates/figlet-rs) for converting 'logo' text into ASCII art.
 
 ![example gif](dvd-term.gif)
+
+## Recent Changes
+
+### v0.1.3
+
+* Removed `ruscii` dependency due to some keyboard input issues on non-Windows platforms. rewritten using `crossterm` directly for rendering and corrected input handling.
+* Added CLI flag `-p, --plain` to force dvd-term to only display the input string instead of converting to ASCII art.
+* Added CLI argument `-a, --art <ART_PATH>` to take a plain text file with a piece of ASCII art to display instead of the default or custom converted input string.
+
+## Installation
+
+### Cargo
+
+* Install the rust toolchain in order to have cargo installed by following
+  [this](https://www.rust-lang.org/tools/install) guide.
+* run `cargo install dvd-term`
+
+## Usage
 
 ```
 Usage: dvd-term [OPTIONS]
@@ -23,14 +41,6 @@ Options:
       -h, --help           Print help
       -V, --version        Print version
 ```
-
-## Installation
-
-### Cargo
-
-* Install the rust toolchain in order to have cargo installed by following
-  [this](https://www.rust-lang.org/tools/install) guide.
-* run `cargo install dvd-term`
 
 ## License
 
