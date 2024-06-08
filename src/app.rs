@@ -30,6 +30,7 @@ pub struct App {
     pub font: FIGfont,
     pub fig_str: String,
     pub fig_size: Vec2,
+    pub canvas_size: Vec2,
     pub color: u8,
     pub speed: u64,
     pub random: bool,
@@ -40,7 +41,14 @@ pub struct App {
 }
 
 impl App {
-    pub fn new(input_text: String, font: FIGfont, color: u8, random: bool, speed: u64) -> Self {
+    pub fn new(
+        input_text: String,
+        font: FIGfont,
+        color: u8,
+        random: bool,
+        speed: u64,
+        plain: bool,
+    ) -> Self {
         let fig_str = figlet(&input_text, &font);
         let fig_size = fig_size(&fig_str);
         Self {
@@ -51,30 +59,40 @@ impl App {
             speed,
             target: BufWriter::new(std::io::stdout()),
             fig_str,
+            canvas_size: term_size(),
             fig_size,
             position: Vec2::rand(term_size().x, term_size().y, fig_size.x, fig_size.y),
             direction: Vec2::rand_dir(),
             running: true,
-            plain: false,
+            plain,
         }
     }
 
     pub fn update(&mut self) {
-        let canvas_size = term_size();
+        self.canvas_size = term_size();
 
-        self.plain = self.fig_size.x >= canvas_size.x - (self.fig_size.x / 2)
-            || self.fig_size.y >= canvas_size.y - (self.fig_size.y / 2);
+        // let mut plain = self.fig_size.x >= self.canvas_size.x - (self.fig_size.x / 2)
+        //     || self.fig_size.y >= self.canvas_size.y - (self.fig_size.y / 2);
+        // if self.plain {
+        //     plain = true;
+        // }
+        let plain = if self.plain {
+            true
+        } else {
+            self.fig_size.x >= self.canvas_size.x - (self.fig_size.x / 2)
+                || self.fig_size.y >= self.canvas_size.y - (self.fig_size.y / 2)
+        };
 
         let mut bounce = false;
 
-        if !self.plain {
+        if !plain {
             if self.position.x + self.direction.x < 0 {
                 bounce = true;
                 self.position.x = 0;
                 self.direction.x = -self.direction.x;
-            } else if self.position.x + self.direction.x + self.fig_size.x >= canvas_size.x {
+            } else if self.position.x + self.direction.x + self.fig_size.x >= self.canvas_size.x {
                 bounce = true;
-                self.position.x = canvas_size.x - self.fig_size.x - 1;
+                self.position.x = self.canvas_size.x - self.fig_size.x - 1;
                 self.direction.x = -self.direction.x;
             }
 
@@ -82,9 +100,10 @@ impl App {
                 bounce = true;
                 self.position.y = 0;
                 self.direction.y = -self.direction.y;
-            } else if self.position.y + self.direction.y + self.fig_size.y > canvas_size.y - 1 {
+            } else if self.position.y + self.direction.y + self.fig_size.y > self.canvas_size.y - 1
+            {
                 bounce = true;
-                self.position.y = canvas_size.y - self.fig_size.y - 1;
+                self.position.y = self.canvas_size.y - self.fig_size.y - 1;
                 self.direction.y = -self.direction.y;
             }
         } else {
@@ -92,10 +111,11 @@ impl App {
                 bounce = true;
                 self.position.x = 0;
                 self.direction.x = -self.direction.x;
-            } else if self.position.x + self.direction.x + self.input.len() as i32 >= canvas_size.x
+            } else if self.position.x + self.direction.x + self.input.len() as i32
+                >= self.canvas_size.x
             {
                 bounce = true;
-                self.position.x = canvas_size.x - self.input.len() as i32 - 1;
+                self.position.x = self.canvas_size.x - self.input.len() as i32 - 1;
                 self.direction.x = -self.direction.x;
             }
 
@@ -103,9 +123,9 @@ impl App {
                 bounce = true;
                 self.position.y = 0;
                 self.direction.y = -self.direction.y;
-            } else if self.position.y + self.direction.y > canvas_size.y - 1 {
+            } else if self.position.y + self.direction.y > self.canvas_size.y - 1 {
                 bounce = true;
-                self.position.y = canvas_size.y - 1;
+                self.position.y = self.canvas_size.y - 1;
                 self.direction.y = -self.direction.y;
             }
         }
@@ -121,7 +141,13 @@ impl App {
     pub fn draw(&mut self) {
         queue!(self.target, Clear(ClearType::All),).expect("Failed to clear screen");
 
-        if self.plain {
+        let plain = if self.plain {
+            true
+        } else {
+            self.fig_size.x >= self.canvas_size.x - (self.fig_size.x / 2)
+                || self.fig_size.y >= self.canvas_size.y - (self.fig_size.y / 2)
+        };
+        if plain {
             queue!(
                 self.target,
                 MoveTo(self.position.x as u16, self.position.y as u16),

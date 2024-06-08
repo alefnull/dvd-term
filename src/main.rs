@@ -48,6 +48,12 @@ static MATCHES: Lazy<clap::ArgMatches> = Lazy::new(|| {
                 .required(false)
                 .action(ArgAction::Set),
         )
+        .arg(
+            arg!(-p --plain "If included, logo will be displayed in plain text instead of converted to ASCII art")
+                .value_parser(value_parser!(bool))
+                .required(false)
+                .action(ArgAction::SetTrue),
+        )
         .get_matches()
 });
 
@@ -75,15 +81,27 @@ fn main() {
         15
     };
 
-    let random = MATCHES.get_one::<bool>("random").is_some();
+    // let random = MATCHES.get_one::<bool>("random").is_some();
+    let random = if let Some(random) = MATCHES.get_one::<bool>("random") {
+        *random
+    } else {
+        false
+    };
 
     let speed = if let Some(speed) = MATCHES.get_one::<u32>("speed") {
         *speed as u64
     } else {
-        30
+        8
     };
 
-    let mut app = app::App::new(input_text, font, color, random, speed);
+    // let plain = MATCHES.get_one::<bool>("plain").is_some();
+    let plain = if let Some(plain) = MATCHES.get_one::<bool>("plain") {
+        *plain
+    } else {
+        false
+    };
+
+    let mut app = app::App::new(input_text, font, color, random, speed, plain);
 
     app.run();
 }
