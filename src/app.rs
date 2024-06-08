@@ -159,6 +159,12 @@ impl App {
                     code: crossterm::event::KeyCode::Esc,
                     ..
                 }) => self.running = false,
+                Event::Key(KeyEvent {
+                    code: crossterm::event::KeyCode::Char('c'),
+                    modifiers: crossterm::event::KeyModifiers::CONTROL,
+                    state: crossterm::event::KeyEventState::NONE,
+                    kind: crossterm::event::KeyEventKind::Press,
+                }) => self.running = false,
                 _ => (),
             }
         }
