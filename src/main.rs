@@ -52,14 +52,14 @@ static MATCHES: Lazy<clap::ArgMatches> = Lazy::new(|| {
 });
 
 fn main() {
-    let input_text = if let Some(text) = MATCHES.get_one::<String>("text") {
-        text.to_string()
+    let input_text = if let Some(input_text) = MATCHES.get_one::<String>("text") {
+        input_text.to_string()
     } else {
         "DVD".to_string()
     };
 
-    let font_path = if let Some(font) = MATCHES.get_one::<String>("font") {
-        font.to_string()
+    let font_path = if let Some(font_path) = MATCHES.get_one::<String>("font") {
+        font_path.to_string()
     } else {
         "".to_string()
     };
@@ -75,11 +75,7 @@ fn main() {
         15
     };
 
-    let random = if let Some(random) = MATCHES.get_one::<bool>("random") {
-        *random
-    } else {
-        false
-    };
+    let random = MATCHES.get_one::<bool>("random").is_some();
 
     let speed = if let Some(speed) = MATCHES.get_one::<u32>("speed") {
         *speed as u64

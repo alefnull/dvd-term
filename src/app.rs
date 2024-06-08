@@ -103,7 +103,7 @@ impl App {
                 bounce = true;
                 self.position.y = 0;
                 self.direction.y = -self.direction.y;
-            } else if self.position.y + self.direction.y > canvas_size.y {
+            } else if self.position.y + self.direction.y > canvas_size.y - 1 {
                 bounce = true;
                 self.position.y = canvas_size.y - 1;
                 self.direction.y = -self.direction.y;
