@@ -13,11 +13,9 @@ A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`figlet-r
 
 ## Recent Changes
 
-### [v0.1.31]
+### [v0.1.32]
 
-* Removed `ruscii` dependency due to some keyboard input issues on non-Windows platforms. rewritten using `crossterm` directly for rendering and corrected input handling.
-* Added CLI flag `-p, --plain` to force dvd-term to only display the input string instead of converting to ASCII art.
-* Added CLI argument `-a, --art <ART_PATH>` to take a plain text file with a piece of ASCII art to display instead of the default or custom converted input string.
+* Implemented some actual error handling/propogation, to get away from relying on 'unwrap' and 'expect' calls.
 
 ## Installation
 
@@ -43,6 +41,12 @@ Options:
       -h, --help            Print help
       -V, --version         Print version
 ```
+
+## Contributing (Issues/PRs)
+
+If you encounter any bugs or problems, or you simply have a feature request, please feel free to create an [issue](https://github.com/alefnull/dvd-term/issues) or make a [pull request](https://github.com/alefnull/dvd-term/pulls), and I'll be happy to review and respond, and merge any PRs that pass a quick review.
+
+See [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## License
 
