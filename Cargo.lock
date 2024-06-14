@@ -134,7 +134,6 @@ dependencies = [
  "clap",
  "crossterm",
  "figlet-rs",
- "once_cell",
  "rand",
 ]
 
@@ -194,12 +193,6 @@ dependencies = [
  "wasi",
  "windows-sys 0.48.0",
 ]
-
-[[package]]
-name = "once_cell"
-version = "1.19.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3fdb12b2476b595f9358c5161aa467c2438859caa136dec86c26fdd2efe17b92"
 
 [[package]]
 name = "parking_lot"
