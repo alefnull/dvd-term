@@ -1,16 +1,14 @@
 use crate::util::{fig_size, figlet, term_size, Result, Vec2};
 use crossterm::{
   cursor::{Hide, MoveTo, Show},
-  event::{poll, read, Event, KeyEvent},
-  execute,
-  queue,
+  event::{
+    poll, read, Event, KeyCode, KeyEvent, KeyEventKind, KeyEventState,
+    KeyModifiers,
+  },
+  execute, queue,
   style::{Color, Print, SetForegroundColor},
   terminal::{
-    disable_raw_mode,
-    enable_raw_mode,
-    Clear,
-    ClearType,
-    EnterAlternateScreen,
+    disable_raw_mode, enable_raw_mode, Clear, ClearType, EnterAlternateScreen,
     LeaveAlternateScreen,
   },
 };
@@ -55,7 +53,7 @@ impl App {
     let art = !art_path.is_empty();
     if art {
       if !Path::new(&art_path,).exists() {
-        println!("File not found: '{}'", art_path,);
+        println!("File not found: {}", art_path,);
         std::process::exit(0,);
       }
       else {
@@ -207,18 +205,18 @@ impl App {
     if poll(Duration::from_millis(target_frame_time,),)? {
       match read()? {
         | Event::Key(KeyEvent {
-          code: crossterm::event::KeyCode::Char('q',),
+          code: KeyCode::Char('q',),
           ..
         },) => self.running = false,
         | Event::Key(KeyEvent {
-          code: crossterm::event::KeyCode::Esc,
-          ..
+          code: KeyCode::Esc,
+        ..
         },) => self.running = false,
         | Event::Key(KeyEvent {
-          code: crossterm::event::KeyCode::Char('c',),
-          modifiers: crossterm::event::KeyModifiers::CONTROL,
-          state: crossterm::event::KeyEventState::NONE,
-          kind: crossterm::event::KeyEventKind::Press,
+          code: KeyCode::Char('c',),
+          modifiers: KeyModifiers::CONTROL,
+          state: KeyEventState::NONE,
+          kind: KeyEventKind::Press,
         },) => self.running = false,
         | _ => (),
       }
