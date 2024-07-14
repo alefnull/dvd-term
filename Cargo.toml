@@ -15,7 +15,7 @@ opt-level = 1
 opt-level = 3
 
 [dependencies]
-clap = { version = "4.5.7", features = ["cargo"] }
+clap = { version = "4.5.8", features = ["cargo"] }
 figlet-rs = "0.1.5"
 rand = "0.8.5"
 crossterm = "0.27.0"
