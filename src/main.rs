@@ -15,7 +15,7 @@ fn main() -> Result<(),> {
 {usage-heading} {usage}
 
 {all-args}{after-help}\n")
-    .arg(arg!(-t --text <TEXT> "The custom text to use. Defaults to \"DVD\"")
+    .arg(arg!(-t --text <TEXT> "The custom text to use. Defaults to \"DVD\". Can be used multiple times to display multiple \'logos\'")
       .value_parser(value_parser!(String))
       .required(false)
       .action(ArgAction::Append))
