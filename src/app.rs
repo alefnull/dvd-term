@@ -28,27 +28,35 @@ pub struct Cell {
 }
 
 pub struct App {
-  pub target:      BufWriter<std::io::Stdout,>,
-  pub input:       String,
-  pub logo_string: String,
-  pub logo_size:   Vec2,
-  pub canvas_size: Vec2,
-  pub color:       u8,
-  pub speed:       u64,
-  pub random:      bool,
-  pub position:    Vec2,
-  pub direction:   Vec2,
-  pub running:     bool,
-  pub plain:       bool,
+  pub target:       BufWriter<std::io::Stdout,>,
+  pub input:        Vec<String,>,
+  pub logo_strings: Vec<String,>,
+  pub logo_sizes:   Vec<Vec2,>,
+  pub canvas_size:  Vec2,
+  pub colors:       Vec<u8,>,
+  pub speed:        u64,
+  pub random:       bool,
+  pub positions:    Vec<Vec2,>,
+  pub directions:   Vec<Vec2,>,
+  pub running:      bool,
+  pub plain:        bool,
 }
 
 impl App {
   pub fn new(
-    input_text: String, font: FIGfont, color: u8, random: bool, speed: u64,
-    plain: bool, art_path: String,
+    input_text: Vec<String,>, font: FIGfont, color: u8, random: bool,
+    speed: u64, plain: bool, art_path: String,
   ) -> Result<Self,> {
-    let mut logo_str = figlet(&input_text, &font,)?;
-    let mut logo_size = fig_size(&logo_str,)?;
+    let mut logo_strs: Vec<String,> = Vec::new();
+    let mut logo_sizes: Vec<Vec2,> = Vec::new();
+
+    if !input_text.is_empty() {
+      for text in &input_text {
+        let logo_str = figlet(text, &font,)?;
+        logo_sizes.push(fig_size(&logo_str.as_str(),)?,);
+        logo_strs.push(logo_str,);
+      }
+    }
 
     let art = !art_path.is_empty();
     if art {
@@ -58,30 +66,36 @@ impl App {
       }
       else {
         let art_path = Path::new(&art_path,);
-        logo_str = read_to_string(art_path,)?;
-        logo_size = fig_size(&logo_str,)?;
+        logo_strs.push(read_to_string(art_path,)?,);
+        logo_sizes.push(fig_size(&logo_strs[logo_strs.len() - 1],)?,);
       }
     }
-    if art {
-      logo_str = read_to_string(art_path,)?;
-      logo_size = fig_size(logo_str.as_str(),)?;
+
+    let colors = vec![color; logo_strs.len()];
+
+    let mut positions: Vec<Vec2,> = Vec::new();
+    let mut directions: Vec<Vec2,> = Vec::new();
+    for _ in 0..logo_strs.len() {
+      positions.push(Vec2::rand(
+        term_size()?.x,
+        term_size()?.y,
+        logo_sizes[0].x,
+        logo_sizes[0].y,
+      ),);
+      directions.push(Vec2::rand_dir(),);
     }
+
     Ok(Self {
       input: input_text,
-      color,
+      colors,
       random,
       speed,
       target: BufWriter::new(std::io::stdout(),),
-      logo_string: logo_str,
+      logo_strings: logo_strs,
+      logo_sizes,
       canvas_size: term_size()?,
-      logo_size,
-      position: Vec2::rand(
-        term_size()?.x,
-        term_size()?.y,
-        logo_size.x,
-        logo_size.y,
-      ),
-      direction: Vec2::rand_dir(),
+      positions,
+      directions,
       running: true,
       plain,
     },)
@@ -94,70 +108,90 @@ impl App {
       true
     }
     else {
-      self.logo_size.x >= self.canvas_size.x - (self.logo_size.x / 2)
-        || self.logo_size.y >= self.canvas_size.y - (self.logo_size.y / 2)
+      let max = self
+        .logo_sizes
+        .iter()
+        .max_by(|a, b| a.x.cmp(&b.x,).then(a.y.cmp(&b.y,),),)
+        .unwrap();
+      max.x >= self.canvas_size.x - (max.x / 2)
+        || max.y >= self.canvas_size.y - (max.y / 2)
     };
 
-    let mut bounce = false;
+    let mut bounces: Vec<bool,> = vec![false; self.logo_strings.len()];
 
     if !plain {
-      if self.position.x + self.direction.x < 0 {
-        bounce = true;
-        self.position.x = 0;
-        self.direction.x = -self.direction.x;
-      }
-      else if self.position.x + self.direction.x + self.logo_size.x
-        >= self.canvas_size.x
-      {
-        bounce = true;
-        self.position.x = self.canvas_size.x - self.logo_size.x - 1;
-        self.direction.x = -self.direction.x;
-      }
+      for i in 0..self.logo_strings.len() {
+        if self.positions[i].x + self.directions[i].x < 0 {
+          bounces[i] = true;
+          self.positions[i].x = 0;
+          self.directions[i].x = -self.directions[i].x;
+        }
+        else if self.positions[i].x
+          + self.directions[i].x
+          + self.logo_sizes[i].x
+          >= self.canvas_size.x
+        {
+          bounces[i] = true;
+          self.positions[i].x = self.canvas_size.x - self.logo_sizes[i].x - 1;
+          self.directions[i].x = -self.directions[i].x;
+        }
 
-      if self.position.y + self.direction.y < 0 {
-        bounce = true;
-        self.position.y = 0;
-        self.direction.y = -self.direction.y;
-      }
-      else if self.position.y + self.direction.y + self.logo_size.y
-        > self.canvas_size.y
-      {
-        bounce = true;
-        self.position.y = self.canvas_size.y - self.logo_size.y;
-        self.direction.y = -self.direction.y;
+        if self.positions[i].y + self.directions[i].y < 0 {
+          bounces[i] = true;
+          self.positions[i].y = 0;
+          self.directions[i].y = -self.directions[i].y;
+        }
+        else if self.positions[i].y
+          + self.directions[i].y
+          + self.logo_sizes[i].y
+          >= self.canvas_size.y
+        {
+          bounces[i] = true;
+          self.positions[i].y = self.canvas_size.y - self.logo_sizes[i].y;
+          self.directions[i].y = -self.directions[i].y;
+        }
       }
     }
     else {
-      if self.position.x + self.direction.x < 0 {
-        bounce = true;
-        self.position.x = 0;
-        self.direction.x = -self.direction.x;
-      }
-      else if self.position.x + self.direction.x + self.input.len() as i32
-        >= self.canvas_size.x
-      {
-        bounce = true;
-        self.position.x = self.canvas_size.x - self.input.len() as i32 - 1;
-        self.direction.x = -self.direction.x;
-      }
+      for i in 0..self.logo_strings.len() {
+        if self.positions[i].x + self.directions[i].x < 0 {
+          bounces[i] = true;
+          self.positions[i].x = 0;
+          self.directions[i].x = -self.directions[i].x;
+        }
+        else if self.positions[i].x
+          + self.directions[i].x
+          + self.input[i].len() as i32
+          >= self.canvas_size.x
+        {
+          bounces[i] = true;
+          self.positions[i].x =
+            self.canvas_size.x - self.input[i].len() as i32 - 1;
+          self.directions[i].x = -self.directions[i].x;
+        }
 
-      if self.position.y + self.direction.y < 0 {
-        bounce = true;
-        self.position.y = 0;
-        self.direction.y = -self.direction.y;
-      }
-      else if self.position.y + self.direction.y > self.canvas_size.y - 1 {
-        bounce = true;
-        self.position.y = self.canvas_size.y - 1;
-        self.direction.y = -self.direction.y;
+        if self.positions[i].y + self.directions[i].y < 0 {
+          bounces[i] = true;
+          self.positions[i].y = 0;
+          self.directions[i].y = -self.directions[i].y;
+        }
+        else if self.positions[i].y + self.directions[i].y
+          >= self.canvas_size.y
+        {
+          bounces[i] = true;
+          self.positions[i].y = self.canvas_size.y;
+          self.directions[i].y = -self.directions[i].y;
+        }
       }
     }
 
-    self.position.x += self.direction.x;
-    self.position.y += self.direction.y;
+    for i in 0..self.logo_strings.len() {
+      self.positions[i].x += self.directions[i].x;
+      self.positions[i].y += self.directions[i].y;
 
-    if self.random && bounce {
-      self.color = rand::thread_rng().gen_range(0..=255,);
+      if self.random && bounces[i] {
+        self.colors[i] = rand::thread_rng().gen_range(0..=255,);
+      }
     }
 
     Ok((),)
@@ -170,27 +204,42 @@ impl App {
       true
     }
     else {
-      self.logo_size.x >= self.canvas_size.x - (self.logo_size.x / 2)
-        || self.logo_size.y >= self.canvas_size.y - (self.logo_size.y / 2)
+      let max = self
+        .logo_sizes
+        .iter()
+        .max_by(|a, b| a.x.cmp(&b.x,),)
+        .unwrap();
+
+      max.x >= self.canvas_size.x - (max.x / 2)
+        || max.y >= self.canvas_size.y - (max.y / 2)
     };
     if plain {
-      queue!(
-        self.target,
-        MoveTo(self.position.x as u16, self.position.y as u16),
-        SetForegroundColor(Color::AnsiValue(self.color)),
-        Print(self.input.as_str())
-      )?;
-    }
-    else {
-      for (i, line,) in self.logo_string.lines().enumerate() {
-        let pos = Vec2::new(self.position.x, self.position.y + i as i32,);
-
+      for i in 0..self.logo_strings.len() {
         queue!(
           self.target,
-          MoveTo(pos.x as u16, pos.y as u16),
-          SetForegroundColor(Color::AnsiValue(self.color)),
-          Print(line)
+          MoveTo(self.positions[i].x as u16, self.positions[i].y as u16),
+          SetForegroundColor(Color::AnsiValue(self.colors[i])),
+          Print(self.input[i].as_str())
         )?;
+      }
+    }
+    else {
+      for i in 0..self.logo_strings.len() {
+        for (j, line,) in self.logo_strings[i].lines().enumerate() {
+          let pos =
+            Vec2::new(self.positions[i].x, self.positions[i].y + j as i32,);
+
+          for (c, char,) in line.chars().enumerate() {
+            if char != ' ' {
+              queue!(
+                self.target,
+                MoveTo(pos.x as u16 + c as u16, pos.y as u16),
+                SetForegroundColor(Color::AnsiValue(self.colors[i])),
+                Print(char)
+              )?;
+            }
+          }
+        }
       }
     }
 
@@ -230,9 +279,9 @@ impl App {
     execute!(self.target, EnterAlternateScreen, Hide,)?;
 
     while self.running {
+      self.handle_input()?;
       self.update()?;
       self.draw()?;
-      self.handle_input()?;
     }
 
     execute!(self.target, Show, LeaveAlternateScreen)?;
