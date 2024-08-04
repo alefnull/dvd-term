@@ -46,13 +46,6 @@ fn main() -> Result<(),> {
 
   let matches = cmd.clone().get_matches();
 
-  // let input_text = if let Some(input_text,) =
-  // matches.get_one::<String>("text",) {
-  //   input_text.to_string()
-  // }
-  // else {
-  //   "DVD".to_string()
-  // };
   let mut input_text = matches
     .get_many::<String>("text",)
     .unwrap_or_default()
