@@ -71,7 +71,21 @@ impl App {
       }
     }
 
-    let colors = vec![color; logo_strs.len()];
+    let mut colors = Vec::new();
+    if random {
+      for _ in 0..logo_strs.len() {
+        let mut c = rand::thread_rng().gen_range(1..=231,);
+        while c == 16 {
+          c = rand::thread_rng().gen_range(1..=231,);
+        }
+        colors.push(c,);
+      }
+    }
+    else {
+      for _ in 0..logo_strs.len() {
+        colors.push(color,);
+      }
+    }
 
     let mut positions: Vec<Vec2,> = Vec::new();
     let mut directions: Vec<Vec2,> = Vec::new();
@@ -190,7 +204,10 @@ impl App {
       self.positions[i].y += self.directions[i].y;
 
       if self.random && bounces[i] {
-        self.colors[i] = rand::thread_rng().gen_range(0..=255,);
+        let prev_col = self.colors[i];
+        while self.colors[i] == prev_col || self.colors[i] == 16 {
+          self.colors[i] = rand::thread_rng().gen_range(1..=231,);
+        }
       }
     }
 
