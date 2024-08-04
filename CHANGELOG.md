@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [v0.1.4]
+
+### Changed
+
+* Modified argument parsing to allow multiple `-t, --text <TEXT>` flags to be used, displaying multiple 'logos'.
+    * Updated `-h, --help` message to explain new `-t, --text <TEXT>` usage.
+* Modified color randomization to disallow 'black' or other too-dark colors.
+
 ## [v0.1.32]
 
 ### Changed
