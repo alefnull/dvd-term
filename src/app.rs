@@ -53,7 +53,7 @@ impl App {
     if !input_text.is_empty() {
       for text in &input_text {
         let logo_str = figlet(text, &font,)?;
-        logo_sizes.push(fig_size(&logo_str.as_str(),)?,);
+        logo_sizes.push(fig_size(logo_str.as_str(),)?,);
         logo_strs.push(logo_str,);
       }
     }
@@ -134,7 +134,7 @@ impl App {
     let mut bounces: Vec<bool,> = vec![false; self.logo_strings.len()];
 
     if !plain {
-      for i in 0..self.logo_strings.len() {
+      for (i, _,) in self.logo_strings.iter().enumerate() {
         if self.positions[i].x + self.directions[i].x < 0 {
           bounces[i] = true;
           self.positions[i].x = 0;
@@ -167,7 +167,7 @@ impl App {
       }
     }
     else {
-      for i in 0..self.logo_strings.len() {
+      for (i, _,) in self.logo_strings.iter().enumerate() {
         if self.positions[i].x + self.directions[i].x < 0 {
           bounces[i] = true;
           self.positions[i].x = 0;
@@ -199,7 +199,7 @@ impl App {
       }
     }
 
-    for i in 0..self.logo_strings.len() {
+    for (i, _,) in self.logo_strings.iter().enumerate() {
       self.positions[i].x += self.directions[i].x;
       self.positions[i].y += self.directions[i].y;
 
