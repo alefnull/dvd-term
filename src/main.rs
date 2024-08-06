@@ -15,10 +15,10 @@ fn main() -> Result<(),> {
 {usage-heading} {usage}
 
 {all-args}{after-help}\n")
-    .arg(arg!(-t --text <TEXT> "The custom text to use. Defaults to \"DVD\"")
+    .arg(arg!(-t --text <TEXT> "The custom text to use. Defaults to \"DVD\". Can be used multiple times to display multiple \'logos\'")
       .value_parser(value_parser!(String))
       .required(false)
-      .action(ArgAction::Set))
+      .action(ArgAction::Append))
     .arg(arg!(-f --font <FONT_PATH> "Specify the path of the figlet font to use")
       .value_parser(value_parser!(String))
       .required(false)
@@ -46,13 +46,14 @@ fn main() -> Result<(),> {
 
   let matches = cmd.clone().get_matches();
 
-  let input_text = if let Some(input_text,) = matches.get_one::<String>("text",)
-  {
-    input_text.to_string()
+  let mut input_text = matches
+    .get_many::<String>("text",)
+    .unwrap_or_default()
+    .map(|text| text.to_string(),)
+    .collect::<Vec<String,>>();
+  if input_text.is_empty() {
+    input_text.push("DVD".to_string(),);
   }
-  else {
-    "DVD".to_string()
-  };
 
   let font_path = if let Some(font_path,) = matches.get_one::<String>("font",) {
     font_path.to_string()

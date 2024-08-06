@@ -6,7 +6,7 @@ pub static DEFAULT_FONT: &str = include_str!("../../assets/hash3d.flf");
 
 pub type Result<T,> = core::result::Result<T, Error,>;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq,)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq,)]
 pub struct Vec2 {
   pub x: i32,
   pub y: i32,

@@ -13,9 +13,11 @@ A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`figlet-r
 
 ## Recent Changes
 
-### [v0.1.32]
+### [v0.1.4]
 
-* Implemented some actual error handling/propogation, to get away from relying on 'unwrap' and 'expect' calls.
+* Modified argument parsing to allow multiple `-t, --text <TEXT>` flags to be used, displaying multiple 'logos'.
+    * Updated `-h, --help` message to explain new `-t, --text <TEXT>` usage.
+* Modified color randomization to disallow 'black' or other too-dark colors.
 
 ## Installation
 
@@ -31,7 +33,7 @@ A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`figlet-r
 Usage: dvd-term [OPTIONS]
 
 Options:
-      -t, --text <TEXT>     The custom text to use. Defaults to "DVD"
+      -t, --text <TEXT>     The custom text to use. Defaults to "DVD". Can be used multiple times to display multiple 'logos'
       -f, --font <FONT>     Specify a custom figlet font path
       -c, --color <COLOR>   Initial logo color code (0-255). Defaults to white (15). (https://ss64.com/bash/syntax-colors.html)
       -r, --random          If included, logo will randomize color when it bounces
