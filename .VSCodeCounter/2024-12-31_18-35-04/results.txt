@@ -1,0 +1,52 @@
+Date : 2024-12-31 18:35:04
+Directory : c:\dev\rust\dvd-term
+Total : 17 files,  1174 codes, 23 comments, 245 blanks, all 1442 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| TOML     |          2 |        414 |          3 |         60 |        477 |
+| Rust     |          3 |        391 |          0 |         59 |        450 |
+| YAML     |          5 |        201 |          7 |         24 |        232 |
+| Markdown |          7 |        168 |         13 |        102 |        283 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                           | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                              |         17 |      1,174 |         23 |        245 |      1,442 |
+| . (Files)                                                      |          6 |        539 |          3 |        131 |        673 |
+| .github                                                        |          8 |        244 |         20 |         55 |        319 |
+| .github (Files)                                                |          2 |         13 |         13 |          3 |         29 |
+| .github\ISSUE_TEMPLATE                                         |          3 |         43 |          3 |         30 |         76 |
+| .github\workflows                                              |          3 |        188 |          4 |         22 |        214 |
+| src                                                            |          3 |        391 |          0 |         59 |        450 |
+| src (Files)                                                    |          2 |        345 |          0 |         48 |        393 |
+| src\util                                                       |          1 |         46 |          0 |         11 |         57 |
++----------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                       | language | code       | comment    | blank      | total      |
++----------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\dev\rust\dvd-term\.github\ISSUE_TEMPLATE\bug_report.md      | Markdown |         27 |          0 |         18 |         45 |
+| c:\dev\rust\dvd-term\.github\ISSUE_TEMPLATE\config.yml         | YAML     |          1 |          0 |          1 |          2 |
+| c:\dev\rust\dvd-term\.github\ISSUE_TEMPLATE\feature_request.md | Markdown |         15 |          3 |         11 |         29 |
+| c:\dev\rust\dvd-term\.github\PULL_REQUEST_TEMPLATE.md          | Markdown |          1 |         10 |          2 |         13 |
+| c:\dev\rust\dvd-term\.github\dependabot.yml                    | YAML     |         12 |          3 |          1 |         16 |
+| c:\dev\rust\dvd-term\.github\workflows\audit.yml               | YAML     |         19 |          1 |          4 |         24 |
+| c:\dev\rust\dvd-term\.github\workflows\cd.yml                  | YAML     |        112 |          3 |         10 |        125 |
+| c:\dev\rust\dvd-term\.github\workflows\ci.yml                  | YAML     |         57 |          0 |          8 |         65 |
+| c:\dev\rust\dvd-term\CHANGELOG.md                              | Markdown |         26 |          0 |         22 |         48 |
+| c:\dev\rust\dvd-term\CODE_OF_CONDUCT.md                        | Markdown |          2 |          0 |          2 |          4 |
+| c:\dev\rust\dvd-term\CONTRIBUTING.md                           | Markdown |         54 |          0 |         27 |         81 |
+| c:\dev\rust\dvd-term\Cargo.lock                                | TOML     |        398 |          2 |         55 |        455 |
+| c:\dev\rust\dvd-term\Cargo.toml                                | TOML     |         16 |          1 |          5 |         22 |
+| c:\dev\rust\dvd-term\README.md                                 | Markdown |         43 |          0 |         20 |         63 |
+| c:\dev\rust\dvd-term\src\app.rs                                | Rust     |        254 |          0 |         31 |        285 |
+| c:\dev\rust\dvd-term\src\main.rs                               | Rust     |         91 |          0 |         17 |        108 |
+| c:\dev\rust\dvd-term\src\util\mod.rs                           | Rust     |         46 |          0 |         11 |         57 |
+| Total                                                          |          |      1,174 |         23 |        245 |      1,442 |
++----------------------------------------------------------------+----------+------------+------------+------------+------------+
