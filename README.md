@@ -37,7 +37,7 @@ Options:
       -f, --font <FONT>     Specify a custom figlet font path
       -c, --color <COLOR>   Initial logo color code (0-255). Defaults to white (15). (https://ss64.com/bash/syntax-colors.html)
       -r, --random          If included, logo will randomize color when it bounces
-      -s, --speed <SPEED>   The speed of the logo (how many 'cells' to move per second). Defaults to 15
+      -s, --speed <SPEED>   The speed of the logo (how many 'cells' to move per second). Defaults to 8
       -p, --plain           If included, logo will be displayed in plain text instead of converted to ASCII art
       -a, --art <ART_PATH>  Specify the path of a plain text file with the ASCII art to display
       -h, --help            Print help

@@ -31,7 +31,7 @@ fn main() -> Result<()> {
       .value_parser(value_parser!(bool))
       .required(false)
       .action(ArgAction::SetTrue))
-    .arg(arg!(-s --speed <SPEED> "The speed of the logo (how many 'cells' to move per second). Defaults to 15")
+    .arg(arg!(-s --speed <SPEED> "The speed of the logo (how many 'cells' to move per second). Defaults to 8")
       .value_parser(value_parser!(u64))
       .required(false)
       .action(ArgAction::Set))
