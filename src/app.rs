@@ -10,7 +10,7 @@ use crossterm::{
     },
 };
 use figlet_rs::FIGfont;
-use rand::Rng;
+use rand::{rng, Rng};
 use std::{
     fs::read_to_string,
     io::{BufWriter, Write},
@@ -75,9 +75,11 @@ impl App {
         let mut colors = Vec::new();
         if random {
             for _ in 0..logo_strs.len() {
-                let mut c = rand::thread_rng().gen_range(1..=231);
+                // let mut c = rand::thread_rng().gen_range(1..=231);
+                let mut c = rng().random_range(1..=231);
                 while c == 16 {
-                    c = rand::thread_rng().gen_range(1..=231);
+                    // c = rand::thread_rng().gen_range(1..=231);
+                    c = rng().random_range(1..=231);
                 }
                 colors.push(c);
             }
@@ -190,7 +192,8 @@ impl App {
             if self.random && bounces[i] {
                 let prev_col = self.colors[i];
                 while self.colors[i] == prev_col || self.colors[i] == 16 {
-                    self.colors[i] = rand::thread_rng().gen_range(1..=231);
+                    // self.colors[i] = rand::thread_rng().gen_range(1..=231);
+                    self.colors[i] = rng().random_range(1..=231);
                 }
             }
         }

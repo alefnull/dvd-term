@@ -1,5 +1,5 @@
 use figlet_rs::{self, FIGfont};
-use rand::Rng;
+use rand::{rng, Rng};
 use std::io::Error;
 
 pub static DEFAULT_FONT: &str = include_str!("../../assets/hash3d.flf");
@@ -19,14 +19,19 @@ impl Vec2 {
 
     pub fn rand(width: i32, height: i32, xoff: i32, yoff: i32) -> Self {
         Self {
-            x: rand::thread_rng().gen_range(0..width - xoff),
-            y: rand::thread_rng().gen_range(0..height - yoff),
+            // x: rand::thread_rng().gen_range(0..width - xoff),
+            // y: rand::thread_rng().gen_range(0..height - yoff),
+            x: rng().random_range(0..width - xoff),
+            y: rng().random_range(0..height - yoff),
         }
     }
 
     pub fn rand_dir() -> Self {
-        let x = if rand::thread_rng().gen() { 1 } else { -1 };
-        let y = if rand::thread_rng().gen() { 1 } else { -1 };
+        // let x = if rand::thread_rng().gen() { 1 } else { -1 };
+        // let y = if rand::thread_rng().gen() { 1 } else { -1 };
+
+        let x = if rng().random() { 1 } else { -1 };
+        let y = if rng().random() { 1 } else { -1 };
         Self { x, y }
     }
 }
