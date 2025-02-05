@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [v0.1.43]
+
+### Changed
+
+* Updated dependencies:
+  * `rand` from `0.8.5` to `0.9.0`
+  * `clap` from `4.5.11` to `4.5.27`
+* Swapped out deprecated `rand` function calls with their replacements
+
 ## [v0.1.4]
 
 ### Changed

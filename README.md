@@ -13,11 +13,12 @@ A bouncing ASCII art DVD logo (or custom text) for the terminal. Uses [`figlet-r
 
 ## Recent Changes
 
-### [v0.1.4]
+### [v0.1.43]
 
-* Modified argument parsing to allow multiple `-t, --text <TEXT>` flags to be used, displaying multiple 'logos'.
-    * Updated `-h, --help` message to explain new `-t, --text <TEXT>` usage.
-* Modified color randomization to disallow 'black' or other too-dark colors.
+* Updated dependencies:
+  * `rand` from `0.8.5` to `0.9.0`
+  * `clap` from `4.5.11` to `4.5.27`
+* Swapped out deprecated `rand` function calls with their replacements
 
 ## Installation
 
