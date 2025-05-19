@@ -1,5 +1,7 @@
 # dvd-term 
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E11F8P04)
+
 [![CI](https://github.com/alefnull/dvd-term/workflows/CI/badge.svg)](https://github.com/alefnull/dvd-term/actions)
 [![CD](https://github.com/alefnull/dvd-term/workflows/CD/badge.svg)](https://github.com/alefnull/dvd-term/actions)
 [![Crates.io](https://img.shields.io/crates/v/dvd-term.svg)](https://crates.io/crates/dvd-term)
