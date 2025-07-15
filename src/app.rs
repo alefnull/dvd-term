@@ -63,7 +63,7 @@ impl App {
         let art = !art_path.is_empty();
         if art {
             if !Path::new(&art_path).exists() {
-                println!("File not found: {}", art_path,);
+                println!("File not found: {art_path}",);
                 std::process::exit(0);
             } else {
                 let art_path = Path::new(&art_path);
