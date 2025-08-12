@@ -18,12 +18,6 @@ use std::{
     time::Duration,
 };
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Cell {
-    pub color: u8,
-    pub char: char,
-}
-
 pub struct App {
     pub target: BufWriter<std::io::Stdout>,
     pub input: Vec<String>,
