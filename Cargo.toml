@@ -1,6 +1,6 @@
 [package]
 name = "dvd-term"
-version = "0.1.43"
+version = "0.1.44"
 edition = "2021"
 description = "A bouncing ASCII art DVD logo (or custom text) for the terminal."
 repository = "https://github.com/alefnull/dvd-term"
