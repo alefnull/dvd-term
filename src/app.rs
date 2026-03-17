@@ -9,8 +9,8 @@ use crossterm::{
         LeaveAlternateScreen,
     },
 };
-use figlet_rs::FIGfont;
-use rand::{rng, Rng};
+use figlet_rs::FIGlet;
+use rand::{rng, RngExt};
 use std::{
     fs::read_to_string,
     io::{BufWriter, Write},
@@ -46,7 +46,7 @@ impl App {
     // create a new App instance with the given configuration
     pub fn new(
         input_text: Vec<String>,
-        font: FIGfont,
+        font: FIGlet,
         color: u8,
         random: bool,
         speed: u64,

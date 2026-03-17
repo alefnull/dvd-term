@@ -1,5 +1,5 @@
 use crate::util::{Result, DEFAULT_FONT};
-use figlet_rs::FIGfont;
+use figlet_rs::FIGlet;
 
 mod app;
 mod config;
@@ -10,12 +10,12 @@ fn main() -> Result<()> {
 
     // load the figlet font (custom or default)
     let default_font =
-        FIGfont::from_content(DEFAULT_FONT).unwrap_or_else(|_| FIGfont::standard().unwrap());
+        FIGlet::from_content(DEFAULT_FONT).unwrap_or_else(|_| FIGlet::standard().unwrap());
 
     let font = if config.font_path.is_empty() {
         default_font
     } else {
-        FIGfont::from_file(&config.font_path).unwrap_or(default_font)
+        FIGlet::from_file(&config.font_path).unwrap_or(default_font)
     };
 
     // create and run the application

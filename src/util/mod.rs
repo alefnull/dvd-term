@@ -1,6 +1,6 @@
 // utility functions and types for the dvd-term application
-use figlet_rs::{self, FIGfont};
-use rand::{rng, Rng};
+use figlet_rs::{self, FIGlet};
+use rand::{rng, RngExt};
 use std::io::Error;
 
 // embedded default figlet font
@@ -45,7 +45,7 @@ pub fn term_size() -> Result<Vec2> {
 }
 
 // convert input text to ASCII art using the given figlet font
-pub(crate) fn figlet(input: &str, font: &FIGfont) -> Result<String> {
+pub(crate) fn figlet(input: &str, font: &FIGlet) -> Result<String> {
     Ok(font
         .convert(input)
         .expect("Failed to convert input to ASCII art.")
