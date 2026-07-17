@@ -74,7 +74,12 @@ impl Config {
             .map(|t| t.to_string())
             .collect::<Vec<String>>();
 
-        if text.is_empty() {
+        let art_path = matches
+            .get_one::<String>("art")
+            .map(|s| s.to_string())
+            .unwrap_or_default();
+
+        if text.is_empty() && art_path.is_empty() {
             text.push(DEFAULT_TEXT.to_string());
         }
 
@@ -94,10 +99,7 @@ impl Config {
                 .copied()
                 .unwrap_or(DEFAULT_SPEED),
             plain: matches.get_one::<bool>("plain").copied().unwrap_or(false),
-            art_path: matches
-                .get_one::<String>("art")
-                .map(|s| s.to_string())
-                .unwrap_or_default(),
+            art_path,
         }
     }
 }

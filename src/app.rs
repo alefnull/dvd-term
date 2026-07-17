@@ -45,7 +45,7 @@ pub struct App {
 impl App {
     // create a new App instance with the given configuration
     pub fn new(
-        input_text: Vec<String>,
+        mut input_text: Vec<String>,
         font: FIGlet,
         color: u8,
         random: bool,
@@ -73,6 +73,7 @@ impl App {
             }
             let art_content = read_to_string(&art_path)?;
             logo_sizes.push(fig_size(&art_content)?);
+            input_text.push(art_content.clone());
             logo_strings.push(art_content);
         }
 
